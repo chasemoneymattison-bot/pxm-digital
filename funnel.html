@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{
   --purple:#5E1A63;
@@ -359,6 +360,20 @@ body{
       </form>
     </section>
 
+    <!-- VERIFY -->
+    <section class="step" data-step="verify">
+      <div class="q-num">Verify Your Email</div>
+      <h1>Check your <em>inbox</em>.</h1>
+      <p class="sub">We sent a 6-digit code to <strong id="verifyEmail" style="color:#fff"></strong>. Enter it below to confirm.</p>
+      <div class="form">
+        <label>Verification Code
+          <input type="text" id="verifyCode" inputmode="numeric" maxlength="6" placeholder="123456" autocomplete="one-time-code" style="text-align:center;font-size:1.4rem;letter-spacing:.4em;font-weight:700" />
+        </label>
+        <p class="form-status" id="verifyStatus"></p>
+        <p style="text-align:center;font-size:.82rem;color:rgba(255,255,255,0.55);margin-top:6px">Didn't get it? <a href="#" id="resendCode" style="color:var(--accent);font-weight:600">Resend code</a></p>
+      </div>
+    </section>
+
     <!-- SUCCESS -->
     <section class="step success" data-step="success">
       <div class="success-icon">✓</div>
@@ -376,7 +391,14 @@ body{
 </div>
 
 <script>
-const stepOrder = ['intro','q1','q2','q3','q4','q5','analyzing','result','form','success'];
+// EmailJS init
+emailjs.init({ publicKey: 'NG9XHvlaWrHynRU42' });
+const EMAILJS_SERVICE = 'service_snq8y9a';
+const EMAILJS_TEMPLATE = 'template_5kac6nk';
+let verificationCode = null;
+let pendingFormData = null;
+
+const stepOrder = ['intro','q1','q2','q3','q4','q5','analyzing','result','form','verify','success'];
 const questionSteps = ['q1','q2','q3','q4','q5'];
 let idx = 0;
 const answers = {};
@@ -394,7 +416,8 @@ const ctaLabels = {
   q1:'Continue →', q2:'Continue →', q3:'Continue →', q4:'Continue →', q5:'Build My Plan →',
   analyzing:'',
   result:'Book My Free Call →',
-  form:'Send My Plan →',
+  form:'Send Verification Code →',
+  verify:'Confirm & Submit →',
   success:''
 };
 
@@ -404,8 +427,8 @@ function render() {
   const cur = currentStep();
   Object.values(stepEls).forEach(s => s.classList.toggle('active', s.dataset.step === cur));
   // progress: out of question steps (1-5) plus result
-  const progressMap = {intro:0, q1:1, q2:2, q3:3, q4:4, q5:5, analyzing:6, result:6, form:7, success:8};
-  progressFill.style.width = (progressMap[cur] / 8 * 100) + '%';
+  const progressMap = {intro:0, q1:1, q2:2, q3:3, q4:4, q5:5, analyzing:6, result:6, form:7, verify:8, success:9};
+  progressFill.style.width = (progressMap[cur] / 9 * 100) + '%';
   nextBtn.textContent = ctaLabels[cur];
   nextBtn.style.display = ctaLabels[cur] ? 'flex' : 'none';
   backBtn.disabled = idx === 0 || cur === 'analyzing' || cur === 'success';
@@ -420,6 +443,7 @@ function render() {
     if (cur === 'intro') ctaSub.textContent = 'Takes 60 seconds · 100% free';
     else if (cur === 'result') ctaSub.innerHTML = '<a href="funnel-web.html" style="color:var(--accent);text-decoration:underline;font-weight:600">I just want a website →</a>';
     else if (cur === 'form') ctaSub.textContent = '🔒 We\'ll never spam you';
+    else if (cur === 'verify') ctaSub.textContent = 'Code expires in 10 minutes';
     else ctaSub.textContent = '';
   }
 }
@@ -453,18 +477,19 @@ nextBtn.addEventListener('click', () => {
       status.style.color = '#fca5a5';
       return;
     }
-    // Append quiz answers
-    Object.entries(answers).forEach(([k, v]) => data.append('quiz_' + k, v));
-    data.append('_subject', 'New PXM Digital Lead — ' + (data.get('name') || ''));
-    status.textContent = 'Sending...';
-    status.style.color = '#e5b3eb';
-    nextBtn.disabled = true;
-    fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
-      .then(r => {
-        if (r.ok) { idx++; render(); }
-        else { status.textContent = 'Something went wrong. Try again.'; status.style.color = '#fca5a5'; nextBtn.disabled = false; }
-      })
-      .catch(() => { status.textContent = 'Network error. Try again.'; status.style.color = '#fca5a5'; nextBtn.disabled = false; });
+    sendVerificationCode(data, status);
+    return;
+  }
+  if (cur === 'verify') {
+    const codeInput = document.getElementById('verifyCode');
+    const status = document.getElementById('verifyStatus');
+    const entered = (codeInput.value || '').trim();
+    if (entered !== String(verificationCode)) {
+      status.textContent = 'Incorrect code. Try again.';
+      status.style.color = '#fca5a5';
+      return;
+    }
+    submitToFormspree(status);
     return;
   }
   if (idx < stepOrder.length - 1) { idx++; render(); }
@@ -472,6 +497,61 @@ nextBtn.addEventListener('click', () => {
 
 backBtn.addEventListener('click', () => {
   if (idx > 0) { idx--; render(); }
+});
+
+function sendVerificationCode(data, status) {
+  const email = data.get('email');
+  verificationCode = Math.floor(100000 + Math.random() * 900000);
+  pendingFormData = data;
+  status.textContent = 'Sending code...';
+  status.style.color = '#e5b3eb';
+  nextBtn.disabled = true;
+  emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { code: verificationCode, to_email: email })
+    .then(() => {
+      document.getElementById('verifyEmail').textContent = email;
+      document.getElementById('verifyCode').value = '';
+      document.getElementById('verifyStatus').textContent = '';
+      idx++; render();
+    })
+    .catch((err) => {
+      console.error(err);
+      status.textContent = 'Could not send code. Check your email and try again.';
+      status.style.color = '#fca5a5';
+      nextBtn.disabled = false;
+    });
+}
+
+function submitToFormspree(status) {
+  if (!pendingFormData) return;
+  const form = document.getElementById('leadForm');
+  Object.entries(answers).forEach(([k, v]) => pendingFormData.append('quiz_' + k, v));
+  pendingFormData.append('_subject', 'New PXM Digital Lead — ' + (pendingFormData.get('name') || ''));
+  pendingFormData.append('email_verified', 'yes');
+  status.textContent = 'Submitting...';
+  status.style.color = '#e5b3eb';
+  nextBtn.disabled = true;
+  fetch(form.action, { method: 'POST', body: pendingFormData, headers: { 'Accept': 'application/json' } })
+    .then(r => {
+      if (r.ok) { idx++; render(); }
+      else { status.textContent = 'Something went wrong. Try again.'; status.style.color = '#fca5a5'; nextBtn.disabled = false; }
+    })
+    .catch(() => { status.textContent = 'Network error. Try again.'; status.style.color = '#fca5a5'; nextBtn.disabled = false; });
+}
+
+// Resend code link
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.id === 'resendCode') {
+    e.preventDefault();
+    const email = pendingFormData ? pendingFormData.get('email') : null;
+    if (!email) return;
+    const status = document.getElementById('verifyStatus');
+    status.textContent = 'Resending...';
+    status.style.color = '#e5b3eb';
+    verificationCode = Math.floor(100000 + Math.random() * 900000);
+    emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { code: verificationCode, to_email: email })
+      .then(() => { status.textContent = 'New code sent.'; status.style.color = '#4ade80'; })
+      .catch(() => { status.textContent = 'Could not resend. Try again.'; status.style.color = '#fca5a5'; });
+  }
 });
 
 function runAnalyzing() {
