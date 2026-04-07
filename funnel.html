@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Build Your Growth Plan — PXM Digital</title>
+<meta name="description" content="Answer 5 quick questions and get a personalized growth plan from PXM Digital. " />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#5E1A63;
+  --purple-deep:#3d0f42;
+  --accent:#e5b3eb;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:#1a0420;color:#fff;
+  -webkit-font-smoothing:antialiased;line-height:1.5;
+}
+.bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(138,58,144,0.55),transparent 50%),
+    radial-gradient(circle at 80% 100%,rgba(94,26,99,0.65),transparent 50%),
+    linear-gradient(180deg,#3d0f42 0%,#1a0420 100%);
+}
+
+.app{
+  position:relative;z-index:1;
+  height:100vh;height:100dvh;
+  max-width:480px;margin:0 auto;
+  display:flex;flex-direction:column;
+  padding:18px 24px 24px;
+}
+
+/* TOP */
+.top{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;flex-shrink:0;
+}
+.top img{height:30px;filter:brightness(0) invert(1)}
+.back{
+  background:none;border:none;color:rgba(255,255,255,0.6);
+  font:inherit;font-size:.85rem;cursor:pointer;padding:6px 10px;
+}
+.back:hover{color:#fff}
+.back:disabled{opacity:0;pointer-events:none}
+
+/* PROGRESS */
+.progress{
+  height:3px;background:rgba(255,255,255,0.12);
+  border-radius:999px;overflow:hidden;margin-bottom:22px;flex-shrink:0;
+}
+.progress__fill{
+  height:100%;background:var(--accent);
+  width:0%;transition:width .5s ease;border-radius:999px;
+}
+
+/* STEPS */
+.steps{
+  flex:1;position:relative;min-height:0;
+}
+.step{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transform:translateX(40px);
+  transition:opacity .4s ease, transform .4s ease;
+  overflow-y:auto;padding:6px 2px;
+}
+.step.active{opacity:1;pointer-events:auto;transform:translateX(0)}
+.step::-webkit-scrollbar{display:none}
+.step{scrollbar-width:none}
+
+/* QUESTION CONTENT */
+.q-num{
+  font-size:.7rem;font-weight:700;color:var(--accent);
+  text-transform:uppercase;letter-spacing:.16em;
+  margin-bottom:12px;
+}
+.step h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.7rem,6vw,2.2rem);
+  font-weight:900;line-height:1.1;
+  letter-spacing:-0.02em;margin-bottom:8px;
+}
+.step h1 em{color:var(--accent);font-style:italic}
+.step .sub{
+  color:rgba(255,255,255,0.65);
+  font-size:.92rem;margin-bottom:22px;
+}
+
+/* CHOICES */
+.choices{display:flex;flex-direction:column;gap:11px}
+.choice{
+  display:flex;align-items:center;gap:14px;
+  padding:18px 18px;
+  background:rgba(255,255,255,0.05);
+  border:1.5px solid rgba(255,255,255,0.15);
+  border-radius:14px;
+  font:inherit;font-size:.97rem;color:#fff;
+  text-align:left;cursor:pointer;
+  transition:all .2s ease;
+  width:100%;
+}
+.choice:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.3)}
+.choice.selected{
+  background:rgba(229,179,235,0.18);
+  border-color:var(--accent);
+}
+.choice-icon{
+  flex-shrink:0;width:36px;height:36px;border-radius:10px;
+  background:rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+}
+.choice.selected .choice-icon{background:var(--accent)}
+.choice-text{flex:1;font-weight:500}
+.choice-check{
+  width:22px;height:22px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,0.25);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:.75rem;font-weight:900;
+}
+.choice.selected .choice-check{
+  background:var(--accent);border-color:var(--accent);
+  color:var(--purple-deep);
+}
+
+/* INTRO STEP */
+.intro{justify-content:center;text-align:center}
+.intro .badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  padding:7px 14px;border-radius:999px;
+  font-size:.7rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  margin:0 auto 18px;width:fit-content;
+}
+.dot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 10px #4ade80;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
+.intro h1{font-size:clamp(2rem,7vw,2.6rem)}
+.intro p.lede{
+  color:rgba(255,255,255,0.78);
+  font-size:1rem;margin-bottom:8px;
+}
+
+/* ANALYZING */
+.analyzing{justify-content:center;text-align:center}
+.spinner{
+  width:64px;height:64px;border-radius:50%;
+  border:4px solid rgba(255,255,255,0.15);
+  border-top-color:var(--accent);
+  margin:0 auto 22px;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.analyzing-status{
+  font-size:.92rem;color:rgba(255,255,255,0.7);
+  margin-top:14px;min-height:20px;
+}
+.analyzing-status.fade{animation:fade 1.6s ease both}
+@keyframes fade{0%{opacity:0}20%,80%{opacity:1}100%{opacity:0}}
+
+/* RESULT */
+.result h1{font-size:clamp(1.85rem,6vw,2.4rem)}
+.result-card{
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(229,179,235,0.3);
+  border-radius:16px;padding:22px;margin:14px 0 18px;
+}
+.result-card .label{
+  font-size:.68rem;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--accent);font-weight:700;margin-bottom:8px;
+}
+.result-card h3{
+  font-family:'Playfair Display',serif;
+  font-size:1.4rem;font-weight:900;margin-bottom:12px;line-height:1.2;
+}
+.result-card p{font-size:.92rem;color:rgba(255,255,255,0.82);margin-bottom:14px}
+.result-card ul{list-style:none}
+.result-card li{
+  display:flex;gap:10px;font-size:.88rem;
+  padding:6px 0;color:rgba(255,255,255,0.85);
+}
+.result-card li::before{content:'✓';color:var(--accent);font-weight:900}
+
+/* FORM */
+.form label{
+  display:block;font-size:.66rem;text-transform:uppercase;
+  letter-spacing:.1em;color:rgba(255,255,255,0.65);
+  font-weight:700;margin-bottom:14px;
+}
+.form input{
+  width:100%;margin-top:7px;padding:13px 14px;
+  background:rgba(255,255,255,0.08);
+  border:1.5px solid rgba(255,255,255,0.15);
+  border-radius:10px;color:#fff;
+  font-family:inherit;font-size:.95rem;
+  text-transform:none;letter-spacing:normal;font-weight:400;
+}
+.form input::placeholder{color:rgba(255,255,255,0.4)}
+.form input:focus{outline:none;border-color:var(--accent);background:rgba(255,255,255,0.13)}
+.form-status{margin-top:8px;text-align:center;font-size:.85rem;font-weight:600;min-height:18px}
+
+/* SUCCESS */
+.success{justify-content:center;text-align:center}
+.success-icon{
+  width:74px;height:74px;border-radius:50%;
+  background:var(--accent);color:var(--purple-deep);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.4rem;font-weight:900;
+  margin:0 auto 20px;
+}
+
+/* FOOTER CTA */
+.foot{flex-shrink:0;padding-top:18px}
+.cta{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:18px;
+  background:#fff;color:var(--purple-deep);
+  font-family:inherit;font-size:1rem;font-weight:800;
+  border:none;border-radius:14px;cursor:pointer;
+  text-decoration:none;
+  box-shadow:0 18px 40px -10px rgba(0,0,0,0.5);
+  transition:transform .15s,opacity .2s;
+  letter-spacing:-0.01em;
+}
+.cta:active{transform:scale(.98)}
+.cta:disabled{opacity:.4;cursor:not-allowed}
+.cta-sub{
+  text-align:center;font-size:.75rem;
+  color:rgba(255,255,255,0.5);margin-top:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<div class="app">
+
+  <div class="top">
+    <button class="back" id="backBtn" disabled>← Back</button>
+    <img src="pxm-logo.png?v=2" alt="PXM Digital" />
+    <div style="width:60px"></div>
+  </div>
+
+  <div class="progress"><div class="progress__fill" id="progressFill"></div></div>
+
+  <div class="steps" id="steps">
+
+    <!-- INTRO -->
+    <section class="step intro active" data-step="intro">
+      <div class="badge"><span class="dot"></span>Free · 60 Seconds</div>
+      <h1>Build your <em>growth plan</em>.</h1>
+      <p class="lede">Answer 5 quick questions and we'll show you exactly how PXM Digital would grow your business.</p>
+    </section>
+
+    <!-- Q1: BUSINESS TYPE -->
+    <section class="step" data-step="q1" data-key="businessType">
+      <div class="q-num">Question 1 of 5</div>
+      <h1>What kind of business do you run?</h1>
+      <p class="sub">So we know what's worked for businesses like yours.</p>
+      <div class="choices">
+        <button class="choice" data-value="local"><div class="choice-icon">🏪</div><div class="choice-text">Local service business</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="ecom"><div class="choice-icon">🛒</div><div class="choice-text">E-commerce / online store</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="coach"><div class="choice-icon">🎯</div><div class="choice-text">Coaching / consulting</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="other"><div class="choice-icon">✨</div><div class="choice-text">Something else</div><div class="choice-check">✓</div></button>
+      </div>
+    </section>
+
+    <!-- Q2: BIGGEST CHALLENGE -->
+    <section class="step" data-step="q2" data-key="challenge">
+      <div class="q-num">Question 2 of 5</div>
+      <h1>What's your <em>biggest</em> problem right now?</h1>
+      <p class="sub">Pick the one that hurts the most.</p>
+      <div class="choices">
+        <button class="choice" data-value="leads"><div class="choice-icon">📉</div><div class="choice-text">Not enough leads coming in</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="convert"><div class="choice-icon">💸</div><div class="choice-text">Traffic comes but doesn't convert</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="website"><div class="choice-icon">💻</div><div class="choice-text">My website looks bad / outdated</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="brand"><div class="choice-icon">🎨</div><div class="choice-text">Brand feels generic / unclear</div><div class="choice-check">✓</div></button>
+      </div>
+    </section>
+
+    <!-- Q3: MONTHLY REVENUE -->
+    <section class="step" data-step="q3" data-key="revenue">
+      <div class="q-num">Question 3 of 5</div>
+      <h1>What's your monthly revenue?</h1>
+      <p class="sub">This helps us match you with the right strategy.</p>
+      <div class="choices">
+        <button class="choice" data-value="starter"><div class="choice-icon">🌱</div><div class="choice-text">Just starting out</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="growing"><div class="choice-icon">📈</div><div class="choice-text">$5K – $25K / month</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="scaling"><div class="choice-icon">🚀</div><div class="choice-text">$25K – $100K / month</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="established"><div class="choice-icon">👑</div><div class="choice-text">$100K+ / month</div><div class="choice-check">✓</div></button>
+      </div>
+    </section>
+
+    <!-- Q4: TRIED BEFORE -->
+    <section class="step" data-step="q4" data-key="tried">
+      <div class="q-num">Question 4 of 5</div>
+      <h1>Have you tried marketing before?</h1>
+      <p class="sub">No wrong answer — we work with all kinds.</p>
+      <div class="choices">
+        <button class="choice" data-value="diy"><div class="choice-icon">🔧</div><div class="choice-text">DIY — ran my own ads</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="freelancer"><div class="choice-icon">👤</div><div class="choice-text">Hired a freelancer</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="agency"><div class="choice-icon">🏢</div><div class="choice-text">Worked with another agency</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="never"><div class="choice-icon">🆕</div><div class="choice-text">Never tried — first time</div><div class="choice-check">✓</div></button>
+      </div>
+    </section>
+
+    <!-- Q5: TIMELINE -->
+    <section class="step" data-step="q5" data-key="timeline">
+      <div class="q-num">Question 5 of 5</div>
+      <h1>How fast do you want results?</h1>
+      <p class="sub">We'll match your urgency.</p>
+      <div class="choices">
+        <button class="choice" data-value="asap"><div class="choice-icon">⚡</div><div class="choice-text">ASAP — I need leads now</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="soon"><div class="choice-icon">📅</div><div class="choice-text">Within 1–3 months</div><div class="choice-check">✓</div></button>
+        <button class="choice" data-value="explore"><div class="choice-icon">🔍</div><div class="choice-text">Just exploring options</div><div class="choice-check">✓</div></button>
+      </div>
+    </section>
+
+    <!-- ANALYZING -->
+    <section class="step analyzing" data-step="analyzing">
+      <div class="spinner"></div>
+      <h1 style="font-size:1.6rem">Building your <em>plan</em>...</h1>
+      <p class="analyzing-status" id="analyzingStatus">Analyzing your answers...</p>
+    </section>
+
+    <!-- RESULT -->
+    <section class="step result" data-step="result">
+      <div class="q-num">Your Personalized Plan</div>
+      <h1 id="resultTitle">Here's what we'd do for you.</h1>
+      <div class="result-card">
+        <div class="label">Recommended Strategy</div>
+        <h3 id="resultStrategy">Custom Growth Plan</h3>
+        <p id="resultSummary">Based on your answers, here's the path we'd take.</p>
+        <ul id="resultSteps"></ul>
+      </div>
+      <p class="sub" style="text-align:center">Want us to walk you through this on a free call?</p>
+    </section>
+
+    <!-- FORM -->
+    <section class="step" data-step="form">
+      <div class="q-num">Almost There</div>
+      <h1>Where should we send your <em>plan</em>?</h1>
+      <p class="sub">We'll text or email you within 24 hours to lock in a call time.</p>
+      <form class="form" id="leadForm" novalidate>
+        <label>Name<input type="text" name="name" required placeholder="Your name" /></label>
+        <label>Email<input type="email" name="email" required placeholder="you@business.com" /></label>
+        <label>Business / Website<input type="text" name="business" required placeholder="Company or @handle" /></label>
+        <p class="form-status" id="leadStatus"></p>
+      </form>
+    </section>
+
+    <!-- SUCCESS -->
+    <section class="step success" data-step="success">
+      <div class="success-icon">✓</div>
+      <h1>You're <em>in</em>.</h1>
+      <p class="lede">Your personalized plan is on its way. We'll reach out within 24 hours to book your call.</p>
+    </section>
+
+  </div>
+
+  <div class="foot">
+    <button class="cta" id="nextBtn">Get Started →</button>
+    <p class="cta-sub" id="ctaSub">Takes 60 seconds · 100% free</p>
+  </div>
+
+</div>
+
+<script>
+const stepOrder = ['intro','q1','q2','q3','q4','q5','analyzing','result','form','success'];
+const questionSteps = ['q1','q2','q3','q4','q5'];
+let idx = 0;
+const answers = {};
+
+const stepEls = {};
+document.querySelectorAll('.step').forEach(s => stepEls[s.dataset.step] = s);
+
+const nextBtn = document.getElementById('nextBtn');
+const backBtn = document.getElementById('backBtn');
+const progressFill = document.getElementById('progressFill');
+const ctaSub = document.getElementById('ctaSub');
+
+const ctaLabels = {
+  intro:'Get Started →',
+  q1:'Continue →', q2:'Continue →', q3:'Continue →', q4:'Continue →', q5:'Build My Plan →',
+  analyzing:'',
+  result:'Book My Free Call →',
+  form:'Send My Plan →',
+  success:''
+};
+
+function currentStep() { return stepOrder[idx]; }
+
+function render() {
+  const cur = currentStep();
+  Object.values(stepEls).forEach(s => s.classList.toggle('active', s.dataset.step === cur));
+  // progress: out of question steps (1-5) plus result
+  const progressMap = {intro:0, q1:1, q2:2, q3:3, q4:4, q5:5, analyzing:6, result:6, form:7, success:8};
+  progressFill.style.width = (progressMap[cur] / 8 * 100) + '%';
+  nextBtn.textContent = ctaLabels[cur];
+  nextBtn.style.display = ctaLabels[cur] ? 'flex' : 'none';
+  backBtn.disabled = idx === 0 || cur === 'analyzing' || cur === 'success';
+
+  // Question gate: disable Next until answered
+  if (questionSteps.includes(cur)) {
+    const key = stepEls[cur].dataset.key;
+    nextBtn.disabled = !answers[key];
+    ctaSub.textContent = `Question ${questionSteps.indexOf(cur)+1} of 5`;
+  } else {
+    nextBtn.disabled = false;
+    if (cur === 'intro') ctaSub.textContent = 'Takes 60 seconds · 100% free';
+    else if (cur === 'result') ctaSub.innerHTML = '<a href="funnel-web.html" style="color:var(--accent);text-decoration:underline;font-weight:600">I just want a website →</a>';
+    else if (cur === 'form') ctaSub.textContent = '🔒 We\'ll never spam you';
+    else ctaSub.textContent = '';
+  }
+}
+
+// Choice selection
+document.querySelectorAll('.choice').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const stepEl = btn.closest('.step');
+    const key = stepEl.dataset.key;
+    stepEl.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers[key] = btn.dataset.value;
+    nextBtn.disabled = false;
+    // Auto-advance after short delay
+    setTimeout(() => { if (currentStep() === stepEl.dataset.step) nextBtn.click(); }, 380);
+  });
+});
+
+nextBtn.addEventListener('click', () => {
+  const cur = currentStep();
+  if (cur === 'q5') {
+    idx++; render(); runAnalyzing();
+    return;
+  }
+  if (cur === 'form') {
+    const data = new FormData(document.getElementById('leadForm'));
+    const status = document.getElementById('leadStatus');
+    if (!data.get('name') || !data.get('email') || !data.get('business')) {
+      status.textContent = 'Please fill in all required fields.';
+      status.style.color = '#fca5a5';
+      return;
+    }
+    idx++; render();
+    return;
+  }
+  if (idx < stepOrder.length - 1) { idx++; render(); }
+});
+
+backBtn.addEventListener('click', () => {
+  if (idx > 0) { idx--; render(); }
+});
+
+function runAnalyzing() {
+  const status = document.getElementById('analyzingStatus');
+  const lines = [
+    'Analyzing your answers...',
+    'Matching strategies that worked for similar businesses...',
+    'Building your custom plan...'
+  ];
+  let i = 0;
+  status.textContent = lines[0];
+  const interval = setInterval(() => {
+    i++;
+    if (i >= lines.length) { clearInterval(interval); return; }
+    status.textContent = lines[i];
+  }, 1100);
+  setTimeout(() => {
+    buildResult();
+    idx++; render();
+  }, 3400);
+}
+
+function buildResult() {
+  const a = answers;
+  const bizMap = {local:'local service business',ecom:'e-commerce store',coach:'coaching/consulting business',other:'business'};
+  const challengeMap = {
+    leads:'lead generation gap',
+    convert:'conversion problem',
+    website:'website that\'s leaking trust',
+    brand:'brand clarity issue'
+  };
+  const stratMap = {
+    leads:'Lead Generation Engine',
+    convert:'Conversion Overhaul',
+    website:'High-Converting Website Rebuild',
+    brand:'Brand & Positioning Reset'
+  };
+
+  const title = document.getElementById('resultTitle');
+  const strategy = document.getElementById('resultStrategy');
+  const summary = document.getElementById('resultSummary');
+  const steps = document.getElementById('resultSteps');
+
+  title.innerHTML = `Here's the plan for your <em>${bizMap[a.businessType] || 'business'}</em>.`;
+  strategy.textContent = stratMap[a.challenge] || 'Custom Growth System';
+
+  // Build summary based on answers
+  let urgencyText = '';
+  if (a.timeline === 'asap') urgencyText = 'Since you need results fast, ';
+  else if (a.timeline === 'soon') urgencyText = 'Working on a 1–3 month timeline, ';
+  else urgencyText = 'As you explore your options, ';
+
+  let triedText = '';
+  if (a.tried === 'diy') triedText = 'we\'ll fix the gaps DIY ads usually leave behind';
+  else if (a.tried === 'freelancer') triedText = 'we\'ll bring the structure freelancers often skip';
+  else if (a.tried === 'agency') triedText = 'we\'ll do the things your last agency didn\'t';
+  else triedText = 'we\'ll set you up the right way from day one';
+
+  summary.textContent = `${urgencyText}we\'ll target your ${challengeMap[a.challenge] || 'biggest bottleneck'} first. ${triedText.charAt(0).toUpperCase() + triedText.slice(1)}.`;
+
+  // Steps based on challenge
+  const stepMap = {
+    leads:[
+      'Audit your current traffic sources',
+      'Build a high-converting landing page',
+      'Launch targeted Meta + Google ad campaigns',
+      'Track every lead and optimize weekly'
+    ],
+    convert:[
+      'Audit your current funnel for leaks',
+      'Rewrite your offer and CTAs',
+      'A/B test the highest-traffic pages',
+      'Improve booking flow & follow-up'
+    ],
+    website:[
+      'Design a conversion-first site rebuild',
+      'Add trust signals & social proof',
+      'Speed and mobile optimization',
+      'Connect tracking & lead capture'
+    ],
+    brand:[
+      'Clarify your positioning & message',
+      'Refine visual identity for premium feel',
+      'Rewrite homepage and offer pages',
+      'Align ads to new brand voice'
+    ]
+  };
+  steps.innerHTML = (stepMap[a.challenge] || stepMap.leads).map(s => `<li>${s}</li>`).join('');
+}
+
+render();
+</script>
+
+</body>
+</html>
