@@ -351,7 +351,7 @@ body{
       <div class="q-num">Almost There</div>
       <h1>Where should we send your <em>plan</em>?</h1>
       <p class="sub">We'll text or email you within 24 hours to lock in a call time.</p>
-      <form class="form" id="leadForm" novalidate>
+      <form class="form" id="leadForm" action="https://formspree.io/f/xnjorqae" method="POST" novalidate>
         <label>Name<input type="text" name="name" required placeholder="Your name" /></label>
         <label>Email<input type="email" name="email" required placeholder="you@business.com" /></label>
         <label>Business / Website<input type="text" name="business" required placeholder="Company or @handle" /></label>
@@ -445,14 +445,26 @@ nextBtn.addEventListener('click', () => {
     return;
   }
   if (cur === 'form') {
-    const data = new FormData(document.getElementById('leadForm'));
+    const form = document.getElementById('leadForm');
+    const data = new FormData(form);
     const status = document.getElementById('leadStatus');
     if (!data.get('name') || !data.get('email') || !data.get('business')) {
       status.textContent = 'Please fill in all required fields.';
       status.style.color = '#fca5a5';
       return;
     }
-    idx++; render();
+    // Append quiz answers
+    Object.entries(answers).forEach(([k, v]) => data.append('quiz_' + k, v));
+    data.append('_subject', 'New PXM Digital Lead — ' + (data.get('name') || ''));
+    status.textContent = 'Sending...';
+    status.style.color = '#e5b3eb';
+    nextBtn.disabled = true;
+    fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+      .then(r => {
+        if (r.ok) { idx++; render(); }
+        else { status.textContent = 'Something went wrong. Try again.'; status.style.color = '#fca5a5'; nextBtn.disabled = false; }
+      })
+      .catch(() => { status.textContent = 'Network error. Try again.'; status.style.color = '#fca5a5'; nextBtn.disabled = false; });
     return;
   }
   if (idx < stepOrder.length - 1) { idx++; render(); }

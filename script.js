@@ -26,7 +26,21 @@ form.addEventListener('submit', (e) => {
     status.style.color = '#c0392b';
     return;
   }
-  status.textContent = 'Thanks — we\'ll be in touch within 24 hours.';
+  data.append('_subject', 'New PXM Digital Contact — ' + (data.get('name') || ''));
+  status.textContent = 'Sending...';
   status.style.color = 'var(--purple)';
-  form.reset();
+  fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+    .then(r => {
+      if (r.ok) {
+        status.textContent = 'Thanks — we\'ll be in touch within 24 hours.';
+        form.reset();
+      } else {
+        status.textContent = 'Something went wrong. Try again.';
+        status.style.color = '#c0392b';
+      }
+    })
+    .catch(() => {
+      status.textContent = 'Network error. Try again.';
+      status.style.color = '#c0392b';
+    });
 });
