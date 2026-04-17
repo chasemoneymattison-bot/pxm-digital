@@ -3,14 +3,28 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PXM Digital — Marketing That Moves The Needle</title>
-<meta name="description" content="PXM Digital is a conversion-focused digital marketing agency specializing in high-performance web design and paid advertising." />
+<title>PXM Digital — We don't do marketing. We do math.</title>
+<meta name="description" content="PXM Digital builds websites and ad systems that turn attention into receipts. Conversion-engineered web design and paid media for businesses that are tired of paying for impressions." />
+<meta property="og:title" content="PXM Digital — We don't do marketing. We do math." />
+<meta property="og:description" content="Websites and ad systems engineered to turn attention into receipts." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=19" />
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
-<body>
+<body class="intro">
+
+<!-- INTRO HINT -->
+<div class="intro-hint" id="introHint">
+  <span class="intro-hint__arrow">↻</span>
+  <span class="intro-hint__text">SPIN TO REVEAL</span>
+</div>
+<div class="intro-faster" id="introFaster">SPIN FASTER</div>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
 
 <!-- NAV -->
 <header class="nav">
@@ -19,6 +33,7 @@
     <nav class="nav__links">
       <a href="#services">Services</a>
       <a href="#approach">Approach</a>
+      <a href="#work">Work</a>
       <a href="#vision">Vision</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -26,21 +41,58 @@
   </div>
 </header>
 
-<!-- HERO -->
+<!-- CINEMATIC HERO -->
 <section class="hero" id="top">
-  <div class="hero__bg"></div>
+  <div class="hero__grain"></div>
   <div class="container hero__content">
-    <span class="eyebrow">Digital Marketing Agency</span>
-    <h1>Marketing that <em>moves</em><br/>the needle.</h1>
-    <p class="lede">PXM Digital builds conversion-focused websites and runs paid ad campaigns engineered to turn attention into revenue.</p>
-    <div class="hero__cta">
-      <a href="#contact" class="btn">Start Your Project</a>
-      <a href="#services" class="btn btn--ghost">See Services</a>
+    <div class="hero__stageWrap">
+      <canvas id="heroStage"></canvas>
     </div>
-    <div class="hero__stats">
-      <div><strong>2</strong><span>Core Services</span></div>
-      <div><strong>100%</strong><span>Conversion Focused</span></div>
-      <div><strong>∞</strong><span>Iterations Until It Works</span></div>
+    <span class="eyebrow eyebrow--dark">Conversion-Engineered Growth</span>
+    <h1 class="hero__title">
+      <span class="word" data-text="We">We</span>
+      <span class="word" data-text="don't">don't</span>
+      <span class="word" data-text="do">do</span>
+      <span class="word word--accent" data-text="marketing.">marketing.</span><br/>
+      <span class="word" data-text="We">We</span>
+      <span class="word" data-text="do">do</span>
+      <span class="word word--accent" data-text="math.">math.</span>
+    </h1>
+    <p class="lede lede--dark">PXM Digital builds websites and ad systems engineered to turn attention into receipts — for businesses that are tired of paying for impressions.</p>
+    <div class="hero__cta">
+      <a href="#contact" class="btn btn--glow">Start Your Project</a>
+      <a href="#work" class="btn btn--ghost btn--ghost-dark">See The Work</a>
+    </div>
+  </div>
+  <div class="hero__scroll">
+    <span></span>SCROLL
+  </div>
+</section>
+
+<!-- LOGO MARQUEE -->
+<section class="marquee-wrap">
+  <div class="marquee">
+    <div class="marquee__track">
+      <span>BUILT WITH</span><span>•</span>
+      <span>GOOGLE ADS</span><span>•</span>
+      <span>META BUSINESS</span><span>•</span>
+      <span>GA4</span><span>•</span>
+      <span>KLAVIYO</span><span>•</span>
+      <span>SHOPIFY</span><span>•</span>
+      <span>HUBSPOT</span><span>•</span>
+      <span>TIKTOK ADS</span><span>•</span>
+      <span>WEBFLOW</span><span>•</span>
+      <span>CLOUDFLARE</span><span>•</span>
+      <span>BUILT WITH</span><span>•</span>
+      <span>GOOGLE ADS</span><span>•</span>
+      <span>META BUSINESS</span><span>•</span>
+      <span>GA4</span><span>•</span>
+      <span>KLAVIYO</span><span>•</span>
+      <span>SHOPIFY</span><span>•</span>
+      <span>HUBSPOT</span><span>•</span>
+      <span>TIKTOK ADS</span><span>•</span>
+      <span>WEBFLOW</span><span>•</span>
+      <span>CLOUDFLARE</span><span>•</span>
     </div>
   </div>
 </section>
@@ -49,15 +101,15 @@
 <section class="section" id="services">
   <div class="container">
     <span class="eyebrow center">What We Do</span>
-    <h2 class="section__title">Two services. Done at the highest level.</h2>
-    <p class="section__sub">Most agencies sell ten things badly. We sell two things obsessively well — because the businesses we work with don't need more noise, they need more revenue.</p>
+    <h2 class="section__title">Two services. <em>Obsessively</em> well.</h2>
+    <p class="section__sub">Most agencies sell ten things badly. We sell two things obsessively well — because the businesses we work with don't need more noise. They need more revenue.</p>
 
     <div class="services">
       <article class="service">
-        <div class="service__num">01</div>
+        <div class="service__num">01 / WEB</div>
         <h3>Web Design</h3>
         <p class="service__tag">Not pretty websites — <em>profitable</em> ones.</p>
-        <p>If traffic hits a weak site, everything else suffers. We build sites engineered around one thing: turning visitors into customers.</p>
+        <p>If traffic hits a weak site, everything else burns. We build sites engineered around one thing: turning visitors into customers.</p>
         <ul>
           <li>Conversion-focused websites</li>
           <li>High-impact landing pages</li>
@@ -69,7 +121,7 @@
       </article>
 
       <article class="service">
-        <div class="service__num">02</div>
+        <div class="service__num">02 / ADS</div>
         <h3>Paid Advertising</h3>
         <p class="service__tag">Traffic and leads — <em>fast</em>.</p>
         <p>The clearest money-making service when done right. We run campaigns built around tracking, testing, and ruthless optimization.</p>
@@ -86,12 +138,133 @@
   </div>
 </section>
 
+<!-- BEFORE / AFTER -->
+<section class="section section--ba">
+  <div class="container">
+    <span class="eyebrow center">Before / After</span>
+    <h2 class="section__title">Drag to see the difference.</h2>
+    <p class="section__sub">Same business. Same offer. Same traffic. The only thing that changed was the site.</p>
+
+    <div class="ba" id="ba">
+      <div class="ba__after">
+        <div class="ba__label ba__label--accent ba__label--right">AFTER PXM</div>
+        <div class="ba__mock ba__mock--after">
+          <div class="mk-orb mk-orb--1"></div>
+          <div class="mk-orb mk-orb--2"></div>
+          <div class="mk-grid"></div>
+          <nav class="mk-nav">
+            <div class="mk-nav__brand"><span class="mk-nav__logo"></span>Ridgeline</div>
+            <div class="mk-nav__links"><span>Services</span><span>Work</span><span>Reviews</span><span>About</span></div>
+            <div class="mk-nav__cta">Free Quote</div>
+          </nav>
+          <div class="mk-hero">
+            <div class="mk-hero__left">
+              <div class="mk-eyebrow"><span class="mk-dot"></span>Trusted by 2,400+ homeowners</div>
+              <h3 class="mk-h1">Vancouver's most trusted <em>roofing crew.</em></h3>
+              <p class="mk-sub">Lifetime warranty. Same-week install. 312 five-star reviews and counting.</p>
+              <div class="mk-ctas">
+                <div class="mk-btn mk-btn--primary">Get Free Quote →</div>
+                <div class="mk-btn mk-btn--ghost">Watch Video</div>
+              </div>
+              <div class="mk-trust">
+                <div class="mk-trust__item"><span class="mk-star">★★★★★</span><strong>4.9</strong><small>Google</small></div>
+                <div class="mk-trust__sep"></div>
+                <div class="mk-trust__item"><strong>BBB A+</strong><small>Accredited</small></div>
+                <div class="mk-trust__sep"></div>
+                <div class="mk-trust__item"><strong>Licensed</strong><small>&amp; Insured</small></div>
+              </div>
+            </div>
+            <div class="mk-hero__right">
+              <div class="mk-card mk-card--photo">
+                <div class="mk-card__shine"></div>
+                <div class="mk-card__tag">Lifetime Warranty</div>
+                <div class="mk-card__bottom">
+                  <strong>$8,400 avg</strong>
+                  <small>per full replacement</small>
+                </div>
+              </div>
+              <div class="mk-card mk-card--quote">
+                <div class="mk-quote__stars">★★★★★</div>
+                <p>"They had the crew on-site in 4 days. Best roof on the block."</p>
+                <div class="mk-quote__who">
+                  <div class="mk-avatar"></div>
+                  <div><strong>Sarah K.</strong><small>North Van · verified</small></div>
+                </div>
+              </div>
+              <div class="mk-card mk-card--stat">
+                <div class="mk-stat__big">+312%</div>
+                <div class="mk-stat__label">booked jobs in 90 days</div>
+                <div class="mk-spark"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ba__before" id="baBefore">
+        <div class="ba__label">BEFORE</div>
+        <div class="ba__mock ba__mock--before">
+          <div class="ug-bar">
+            <span class="ug-bar__logo">🏠 ACME ROOFING INC.</span>
+            <span class="ug-bar__links">Home | About Us | Services | Contact Us | FAQ</span>
+          </div>
+          <div class="ug-hero">
+            <h3 class="ug-h1">WELCOME TO OUR ROOFING WEBSITE!!!</h3>
+            <p class="ug-tag"><em>"Your Number 1 Choice For Roofing Solutions"</em></p>
+            <marquee class="ug-marq">*** NOW OFFERING FREE ESTIMATES -- CALL TODAY -- 555-0142 -- SE HABLA ESPAÑOL ***</marquee>
+            <div class="ug-body">
+              <div class="ug-col">
+                <h4 class="ug-h2">About Us</h4>
+                <p>Welcome to Acme Roofing Inc, a family owned buisness since 1987. We do residential roofs and some comercial roofs also. Please browse our website to learn more about us and our sevices. We are fully licensed.</p>
+                <p><a class="ug-link">Click here to read more &gt;&gt;</a></p>
+                <h4 class="ug-h2">Our Services</h4>
+                <ul class="ug-list">
+                  <li>Roof Installation</li>
+                  <li>Roof Repair</li>
+                  <li>Gutter Cleaning</li>
+                  <li>Skylights &amp; More!!</li>
+                </ul>
+              </div>
+              <div class="ug-side">
+                <div class="ug-box">
+                  <div class="ug-box__title">CONTACT US TODAY!!</div>
+                  <div class="ug-box__body">
+                    Phone: (555) 0142<br/>
+                    Fax: (555) 0143<br/>
+                    Email: <a class="ug-link">info@acmeroofing.net</a><br/><br/>
+                    <b>Office Hours:</b><br/>
+                    Mon-Fri 8am-5pm<br/>
+                    Sat 9am-12pm<br/>
+                    Sun - CLOSED
+                  </div>
+                </div>
+                <div class="ug-counter">
+                  <span>Visitors:</span>
+                  <span class="ug-counter__num">00094721</span>
+                </div>
+                <div class="ug-badges">
+                  <div class="ug-badge ug-badge--ie">Best viewed in Internet Explorer 6</div>
+                  <div class="ug-badge ug-badge--html">HTML 4.0 Validated</div>
+                </div>
+              </div>
+            </div>
+            <div class="ug-foot">Copyright © 2004 Acme Roofing Inc. All Rights Reserved. | <a class="ug-link">Webmaster</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="ba__handle" id="baHandle">
+        <div class="ba__handleLine"></div>
+        <div class="ba__handleKnob">⇆</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- APPROACH -->
-<section class="section section--alt" id="approach">
+<section class="section" id="approach">
   <div class="container approach">
     <div>
       <span class="eyebrow">Our Approach</span>
-      <h2 class="section__title">We treat marketing like engineering.</h2>
+      <h2 class="section__title">Marketing as <em>engineering</em>.</h2>
       <p>Every campaign, every page, every headline gets measured. We don't chase trends — we chase ROI. Our process is built around three things: clarity, conversion, and constant iteration.</p>
     </div>
     <div class="approach__grid">
@@ -107,6 +280,64 @@
         <h4>03 — Iteration</h4>
         <p>We test, measure, refine, repeat. The first version is never the final version — and that's the point.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="section section--alt" id="work">
+  <div class="container">
+    <span class="eyebrow center">Portfolio</span>
+    <h2 class="section__title">Sites we've <em>built</em>.</h2>
+    <p class="section__sub">A selection of live websites designed, developed, and launched by PXM Digital.</p>
+
+    <div class="portfolio">
+      <!-- Duplicate an <article> block below to add a new project.
+           - Replace SCREENSHOT_URL with a path to an image (e.g. work/project-1.jpg) or leave blank for a gradient placeholder
+           - Replace the href with the live site URL
+           - Update the title, tag, and short blurb -->
+
+      <article class="proj">
+        <a class="proj__link" href="https://chasemoneymattison-bot.github.io/rain-city-barbershop/" target="_blank" rel="noopener">
+          <div class="proj__shot" style="background-image:url('work/rain-city.jpg')">
+            <div class="proj__ph">Rain City Mens Salon</div>
+            <div class="proj__overlay"><span>Visit Site →</span></div>
+          </div>
+          <div class="proj__body">
+            <span class="proj__tag">Web Design · SEO Engineering</span>
+            <h4 class="proj__title">Rain City Mens Salon</h4>
+            <p class="proj__desc">Full-stack site for West Seattle's premier men's salon — Schema.org JSON-LD, Open Graph, geo-targeting, and online booking integration.</p>
+          </div>
+        </a>
+      </article>
+
+      <article class="proj">
+        <a class="proj__link" href="https://chasemoneymattison-bot.github.io/cutters-lounge/" target="_blank" rel="noopener">
+          <div class="proj__shot" style="background-image:url('work/cutters-lounge.jpg')">
+            <div class="proj__ph">Cutters Lounge</div>
+            <div class="proj__overlay"><span>Visit Site →</span></div>
+          </div>
+          <div class="proj__body">
+            <span class="proj__tag">Web Design · E-Commerce · Booking</span>
+            <h4 class="proj__title">Cutters Lounge</h4>
+            <p class="proj__desc">Atlanta's premier grooming lounge — custom cart system, product shop, appointment booking flow, and multi-barber staff profiles.</p>
+          </div>
+        </a>
+      </article>
+
+      <article class="proj">
+        <a class="proj__link" href="https://chasemoneymattison-bot.github.io/tbrooks-barber/" target="_blank" rel="noopener">
+          <div class="proj__shot" style="background-image:url('work/tbrooks.jpg')">
+            <div class="proj__ph">T. Brooks Quality Cuts</div>
+            <div class="proj__overlay"><span>Visit Site →</span></div>
+          </div>
+          <div class="proj__body">
+            <span class="proj__tag">Web Design · SEO · Booking</span>
+            <h4 class="proj__title">T. Brooks Quality Cuts</h4>
+            <p class="proj__desc">Seattle barbershop with cinematic hero, animated ticker bar, before/after gallery, live reviews integration, and full appointment booking flow.</p>
+          </div>
+        </a>
+      </article>
     </div>
   </div>
 </section>
@@ -131,37 +362,27 @@
   </div>
 </section>
 
-<!-- PORTFOLIO PLACEHOLDER -->
-<section class="section section--alt" id="portfolio">
-  <div class="container">
-    <span class="eyebrow center">Portfolio</span>
-    <h2 class="section__title">Recent work.</h2>
-    <p class="section__sub">A selection of projects coming soon. Want to be the next case study?</p>
-    <div class="portfolio">
-      <div class="portfolio__card"><div class="portfolio__img"></div><h4>Project One</h4><p>Web Design · Coming Soon</p></div>
-      <div class="portfolio__card"><div class="portfolio__img"></div><h4>Project Two</h4><p>Paid Ads · Coming Soon</p></div>
-      <div class="portfolio__card"><div class="portfolio__img"></div><h4>Project Three</h4><p>Web Design · Coming Soon</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="section contact" id="contact">
-  <div class="container contact__inner">
+<!-- FUNNEL -->
+<section class="section funnel" id="contact">
+  <div class="container funnel__inner">
     <span class="eyebrow center">Let's Talk</span>
-    <h2 class="section__title">Ready to build something that converts?</h2>
-    <p class="section__sub">Tell us about your business. We'll tell you exactly how we'd grow it.</p>
+    <h2 class="section__title">Ready to build something that <em>converts</em>?</h2>
+    <p class="section__sub">Take 30 seconds below — we'll be in touch within 24 hours.</p>
 
-    <form class="form" id="contactForm" action="https://formspree.io/f/xnjorqae" method="POST" novalidate>
-      <div class="form__row">
-        <label>Name<input type="text" name="name" required placeholder="Your name" /></label>
-        <label>Email<input type="email" name="email" required placeholder="you@company.com" /></label>
-      </div>
-      <label>Business / Website<input type="text" name="business" placeholder="Company name or URL" /></label>
-      <label>What do you need?<textarea name="message" rows="4" required placeholder="Web design, ads, or both — and what's the goal?"></textarea></label>
-      <button type="submit" class="btn">Send Message</button>
-      <p class="form__status" id="formStatus"></p>
-    </form>
+    <div class="funnel__tabs" role="tablist">
+      <button class="funnel__tab is-active" data-funnel="funnel.html" role="tab" aria-selected="true">Growth Plan</button>
+      <button class="funnel__tab" data-funnel="funnel-web.html" role="tab" aria-selected="false">Website Plan</button>
+    </div>
+    <div class="funnel__frame">
+      <iframe
+        id="funnelFrame"
+        src="funnel.html"
+        title="PXM Digital intake funnel"
+        loading="lazy"
+        allow="clipboard-write"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
   </div>
 </section>
 
@@ -173,6 +394,6 @@
   </div>
 </footer>
 
-<script src="script.js"></script>
+<script src="script.js?v=27"></script>
 </body>
 </html>
